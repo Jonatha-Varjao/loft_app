@@ -16,8 +16,16 @@ class BrokerBase(RWModel):
     created_at: datetime = None
     update_at: datetime = None
 
-class BrokerInDB(DBModelMixin, BrokerBase):
-    pass
+class BrokerInDB(DBModelMixin):
+    first_name: str
+    last_name: str
+    email: EmailStr
+    phone: str
+    idade: int
+    creci: str
+    created_at: datetime = None
+    update_at: datetime = None
+    
 
 class BrokerUpdate(RWModel):
     first_name: str

@@ -17,7 +17,6 @@ async def create_broker(
     *,
     broker_data: BrokerBase
 ) -> BrokerInDB :
-    print('AAAAAAAAAAA')
     broker = await broker_crud.create(db, broker_in=broker_data)
     return broker
 
@@ -27,8 +26,8 @@ async def get_broker(
     db: AsyncIOMotorClient = Depends(get_db),
     limit: int = Query(10, gt=0),
     skip: int = Query(0, ge=0),
-) -> List[BrokerInDB] :
+) -> List[Optional[BrokerInDB]] :
     brokers: List[BrokerInDB] = []
-    rows = db['hack']['brokers'].find(limit=limit, skip=skip)
+    rows = db['hack']['brokers'].find(limit=limit, skip=skip, projection={'password': 0})
     brokers = [ BrokerInDB(**row) async for row in rows ]
     return brokers

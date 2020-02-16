@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import List, Optional
 
+from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
-from app.db.mongodb import AsyncIOMotorClient
 
+from app.db.mongodb import AsyncIOMotorClient
 from app.core.security import get_password_hash, verify_password
 from app.schema.broker import BrokerInDB, BrokerBase
 
@@ -14,7 +15,9 @@ async def get(db: AsyncIOMotorClient, user_id: str) -> Optional[BrokerInDB]:
 
 
 async def get_by_email(db: AsyncIOMotorClient, *, email: str) -> Optional[BrokerInDB]:
-    broker = db['hack']['brokers'].find_one({"email": email })
+    broker = await db['hack']['brokers'].find_one({"email": email })
+    if not broker:
+        return None
     return BrokerInDB(**broker)
 
 async def authenticate(db: AsyncIOMotorClient, *, email: str, password: str) -> Optional[BrokerInDB]:
