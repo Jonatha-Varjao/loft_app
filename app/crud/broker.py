@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 
 from fastapi.encoders import jsonable_encoder
@@ -7,22 +8,17 @@ from app.core.security import get_password_hash, verify_password
 from app.schema.broker import BrokerInDB, BrokerBase
 
 
-async def get(db_session: AsyncIOMotorClient, user_id: str) -> Optional[BrokerInDB]:
-    return  
+async def get(db: AsyncIOMotorClient, user_id: str) -> Optional[BrokerInDB]:
+    broker = db['hack']['brokers'].find_one({"_id":ObjectId(id) })
+    return BrokerInDB(**broker)
 
 
-async def get_by_email(db_session: AsyncIOMotorClient, *, email: str) -> Optional[BrokerInDB]:
-    return  
+async def get_by_email(db: AsyncIOMotorClient, *, email: str) -> Optional[BrokerInDB]:
+    broker = db['hack']['brokers'].find_one({"email": email })
+    return BrokerInDB(**broker)
 
-
-async def get_by_username(db_session: AsyncIOMotorClient, *, username: str) -> Optional[BrokerInDB]:
-    return  
-
-
-async def authenticate(db_session: AsyncIOMotorClient, *, email_or_username: str, password: str) -> Optional[BrokerInDB]:
-    user
-    if not user:
-        user
+async def authenticate(db: AsyncIOMotorClient, *, email: str, password: str) -> Optional[BrokerInDB]:
+    user = await get_by_email(db, email=email)
     if not user:
         return None
     if not verify_password(password, user.password):
@@ -31,7 +27,7 @@ async def authenticate(db_session: AsyncIOMotorClient, *, email_or_username: str
 
 
 async def get_multi(
-    db_session: AsyncIOMotorClient,
+    db: AsyncIOMotorClient,
     *,
     skip=0,
     limit=100,
@@ -39,26 +35,25 @@ async def get_multi(
     ) -> List[Optional[BrokerInDB]]:
     return  
 
-async def get_all_multi(db_session: AsyncIOMotorClient, *, skip=0, limit=100) -> List[Optional[BrokerInDB]]:
-    return  db_session.query(BrokerInDB)\
+async def get_all_multi(db: AsyncIOMotorClient, *, skip=0, limit=100) -> List[Optional[BrokerInDB]]:
+    return  db.query(BrokerInDB)\
         .order_by(BrokerInDB.full_name)\
         .offset(skip)\
         .limit(limit)\
         .all()
 
-async def create(db_session: AsyncIOMotorClient, *, user_in: BrokerBase) -> BrokerInDB:
-    user = BrokerInDB(
-        **user_in.dict()
-    )
-    
-    db_session.add(user)
-    db_session.commit()
-    db_session.refresh(user)
-    
-    return user
+async def create(db: AsyncIOMotorClient, *, broker_in: BrokerBase) -> BrokerInDB:
+    broker_in.password = get_password_hash(broker_in.password)
+    now = datetime.utcnow()
+    broker_in.created_at, broker_in.update_at = now, now
+    broker_json = broker_in.dict()
+    await db['hack']['brokers'].insert_one(broker_json) 
+    broker_json['_id']
+    return broker_json
 
 
-async def update(db_session: AsyncIOMotorClient) -> BrokerInDB:
+
+async def update(db: AsyncIOMotorClient) -> BrokerInDB:
     user_data = jsonable_encoder(user)
     update_data = user_in.dict(skip_defaults=True)
     for field in user_data:
@@ -68,8 +63,8 @@ async def update(db_session: AsyncIOMotorClient) -> BrokerInDB:
         passwordhash = get_password_hash(user_in.password)
         user.password = passwordhash
     
-    db_session.add(user)
-    db_session.commit()
-    db_session.refresh(user)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
     
     return user

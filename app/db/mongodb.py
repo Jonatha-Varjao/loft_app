@@ -6,5 +6,7 @@ class DataBase:
 
 db = DataBase()
 db.client = AsyncIOMotorClient(MONGODB_URI)
-db.client['1help']['users'].create_index( [("name", 1)], unique=True )
-db.client['1help']['discounts'].create_index( [("name", 1)], unique=True )
+
+db.client['hack']['brokers'].create_index( [("email", 1)], unique=True)
+db.client['hack']['brokers'].create_index( [("phone", 1)], unique=True)
+db.client['hack']['brokers'].create_index( [("creci", 1)], unique=True)

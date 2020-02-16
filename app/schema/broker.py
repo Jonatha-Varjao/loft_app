@@ -1,18 +1,27 @@
 from typing import List, Optional
-
+from datetime import datetime
 from pydantic import EmailStr
 
 from app.schema.base import DBModelMixin
 from app.schema.rwmodel import RWModel
 
-
 class BrokerBase(RWModel):
-    name: str
+    first_name: str
+    last_name: str
     email: EmailStr
     password: str
-    celular: str
+    phone: str
     idade: int
     creci: str
+    created_at: datetime = None
+    update_at: datetime = None
 
 class BrokerInDB(DBModelMixin, BrokerBase):
     pass
+
+class BrokerUpdate(RWModel):
+    first_name: str
+    last_name: str
+    idade: int
+    creci: str
+    update_at: datetime = None
