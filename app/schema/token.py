@@ -16,7 +16,7 @@ class TokenPayload(BaseModel):
 
 class LoginOAuth(BaseModel):
     grant_type: str = None
-    username: str
+    email: str
     password: str
     client_id: str = None
     client_secret: str = None

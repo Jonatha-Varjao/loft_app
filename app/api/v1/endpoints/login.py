@@ -28,8 +28,8 @@ def login_access_token(
     """
     OAuth2 compatible token login, get an access token for future requests
     """
-    user = authenticate(
-        db, email_or_username=data.username, password=data.password
+    user = broker_crud.authenticate(
+        db, email=data.username, password=data.password
     )
     if not user:
         return Response(json.dumps({
@@ -37,12 +37,6 @@ def login_access_token(
             "message": ptBr['eIncorrectDataLogin']
         }),
             status_code=422)
-    if not is_active(user):
-        return Response(json.dumps({
-            "messageCode": codes['db'],
-            "message": ptBr['eUserNotActive']
-        }),
-            status_code=401)
     user_response = {
         "id":str(user.id),
         "username":user.username,
