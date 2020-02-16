@@ -20,7 +20,7 @@ router = APIRouter()
 
 
 @router.post("/login/access-token")
-def login_access_token(
+async def login_access_token(
         *,
         db: AsyncIOMotorClient = Depends(get_db),
         data: LoginOAuth
@@ -28,21 +28,21 @@ def login_access_token(
     """
     OAuth2 compatible token login, get an access token for future requests
     """
-    user = broker_crud.authenticate(
-        db, email=data.username, password=data.password
+    user = await broker_crud.authenticate(
+        db, email=data.email, password=data.password
     )
     if not user:
         return Response(json.dumps({
             "messageCode": codes['validation'],
             "message": ptBr['eIncorrectDataLogin']
         }),
-            status_code=422)
+            status_code=401)
+    
     user_response = {
         "id":str(user.id),
-        "username":user.username,
-        "full_name":user.full_name,
-        "email":user.email,
-        "is_superuser":user.is_superuser
+        "first_name":user.first_name,
+        "last_name":user.last_name,
+        "email":user.email
     }
     access_token_expires = timedelta(minutes=config.ACCESS_TOKEN_EXPIRE_MINUTES)
     
