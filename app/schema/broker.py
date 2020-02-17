@@ -10,6 +10,7 @@ class BrokerBase(DateTimeModelMixin, RWModel):
     last_name: str
     email: EmailStr
     password: str
+    is_corretor: bool
     phone: str
     idade: int
     creci: str
@@ -26,8 +27,10 @@ class BrokerInDB(DBModelMixin):
 class BrokerUpdate(RWModel):
     first_name: Optional[str]
     last_name: Optional[str]
+    is_corretor: Optional[bool]
     idade: Optional[int]
     creci: Optional[str]
+    # lista contendo os id`s do imoveis
 
 class BrokerList(Paginated):
     data: List[BrokerInDB]
