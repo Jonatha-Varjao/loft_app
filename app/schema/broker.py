@@ -2,10 +2,10 @@ from typing import List, Optional
 from datetime import datetime
 from pydantic import EmailStr
 
-from app.schema.base import DBModelMixin
+from app.schema.base import DateTimeModelMixin, DBModelMixin, Paginated
 from app.schema.rwmodel import RWModel
 
-class BrokerBase(RWModel):
+class BrokerBase(DateTimeModelMixin, RWModel):
     first_name: str
     last_name: str
     email: EmailStr
@@ -13,8 +13,6 @@ class BrokerBase(RWModel):
     phone: str
     idade: int
     creci: str
-    created_at: datetime = None
-    update_at: datetime = None
 
 class BrokerInDB(DBModelMixin):
     first_name: str
@@ -23,13 +21,13 @@ class BrokerInDB(DBModelMixin):
     phone: str
     idade: int
     creci: str
-    created_at: datetime = None
-    update_at: datetime = None
     
 
 class BrokerUpdate(RWModel):
-    first_name: str
-    last_name: str
-    idade: int
-    creci: str
-    update_at: datetime = None
+    first_name: Optional[str]
+    last_name: Optional[str]
+    idade: Optional[int]
+    creci: Optional[str]
+
+class BrokerList(Paginated):
+    data: List[BrokerInDB]

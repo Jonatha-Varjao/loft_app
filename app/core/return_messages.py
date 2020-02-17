@@ -16,6 +16,8 @@ ptBr = dict(
     passwordRecoveryEmail="Email de Recuperação de Senha Enviado.",
     passwordRecoverySuccess="Sua Senha foi atualizada com sucesso.",
     usersDeleted="Usuários Deletados com sucesso",
+    # Mensagens de formulario
+    formEmpty='Formulário vazio'
 )
 
 codes = dict(success=0, validation=1, db=2, authorization=3)
