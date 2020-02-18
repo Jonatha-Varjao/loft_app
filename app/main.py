@@ -7,4 +7,4 @@ from app.api.v1.api import api_routers
 app = FastAPI(title=config.PROJECT_NAME, openapi_url="/api/v1/openapi.json")
 
 app.add_middleware(DBConnection)
-app.include_router(api_routers)
+app.include_router(api_routers, prefix="/api/v1")

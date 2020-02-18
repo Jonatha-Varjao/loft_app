@@ -57,8 +57,7 @@ class PropertyBase(DateTimeModelMixin, RWModel):
     personalidade: Optional[Personalidade]
     valor: Optional[Valor]
     plus: Optional[List[Plus]]
-    geo_location: List = Field(..., min_items=2, max_items=2, 
-                        description='Longitude first then Latitude')
+    geo_location: List = Field(..., min_items=2, max_items=2)
 
 class PropertyInDB(DBModelMixin):
     nome: Optional[str]
@@ -73,8 +72,30 @@ class PropertyInDB(DBModelMixin):
     plus: Optional[List[Plus]]
     geo_location: List = Field(List, min_items=2, max_items=2)
 
+    @validator("dono")
+    def validate_id(cls, dono):
+        return str(dono)
+
+    class Config:
+        allow_population_by_field_name = True
+        json_encoders = { 
+            ObjectId: lambda x: str(x)
+        }
+
+
 class PropertyUpdate(RWModel):
-    pass
+    nome: Optional[str]
+    estado: Optional[str]
+    cidade: Optional[str]
+    dono: Optional[ObjectIdStr] # object id do dono
+    corretor: Optional[List[str]] # objects ids dos corretores
+    tipo: Optional[Tipo]
+    ambiente: Optional[Ambiente]
+    personalidade: Optional[Personalidade]
+    valor: Optional[Valor]
+    plus: Optional[List[Plus]]
+    geo_location: Optional[List] = Field(None, min_items=2, max_items=2)
+
 
 class PropertyList(Paginated):
     data: List[PropertyInDB]
