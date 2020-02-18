@@ -1,9 +1,11 @@
 from enum import Enum, IntEnum
 from typing import List, Optional
 from datetime import datetime
-from pydantic import EmailStr
 
-from app.schema.base import DateTimeModelMixin, DBModelMixin, Paginated
+from pydantic import EmailStr, validator, Field
+from bson import ObjectId
+
+from app.schema.base import DateTimeModelMixin, DBModelMixin, Paginated, ObjectIdStr
 from app.schema.rwmodel import RWModel
 
 
@@ -45,19 +47,31 @@ class Plus(IntEnum):
     
 
 class PropertyBase(DateTimeModelMixin, RWModel):
-    
-    dono: str #object id do dono
-    corretor: List[str] #objects ids dos corretores
-    tipo: Tipo
-    ambiente: Ambiente
-    personalidade: Personalidade
-    valor: Valor
-    plus: List[Plus]
-    
-    
+    nome: Optional[str]
+    estado: Optional[str]
+    cidade: Optional[str]
+    dono: Optional[str] #object id do dono
+    corretor: Optional[List[str]] #objects ids dos corretores
+    tipo: Optional[Tipo]
+    ambiente: Optional[Ambiente]
+    personalidade: Optional[Personalidade]
+    valor: Optional[Valor]
+    plus: Optional[List[Plus]]
+    geo_location: List = Field(..., min_items=2, max_items=2, 
+                        description='Longitude first then Latitude')
 
 class PropertyInDB(DBModelMixin):
-    pass
+    nome: Optional[str]
+    estado: Optional[str]
+    cidade: Optional[str]
+    dono: Optional[ObjectIdStr] # object id do dono
+    corretor: Optional[List[str]] # objects ids dos corretores
+    tipo: Optional[Tipo]
+    ambiente: Optional[Ambiente]
+    personalidade: Optional[Personalidade]
+    valor: Optional[Valor]
+    plus: Optional[List[Plus]]
+    geo_location: List = Field(List, min_items=2, max_items=2)
 
 class PropertyUpdate(RWModel):
     pass

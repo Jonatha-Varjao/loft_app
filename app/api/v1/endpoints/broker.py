@@ -11,9 +11,12 @@ from app.core.return_messages import ptBr, codes
 from app.core.security import get_password_hash
 from app.db.mongodb import AsyncIOMotorClient
 from app.middleware.db import get_db
+
 from app.schema.broker import BrokerBase, BrokerInDB, BrokerUpdate, BrokerList
+from app.schema.property import PropertyBase, PropertyList, PropertyInDB, PropertyUpdate
 
 import app.crud.broker as broker_crud
+import app.crud.property as property_crud
 
 router = APIRouter()
 
@@ -112,3 +115,13 @@ async def delete_broker(
     return broker
 
 
+@router.post('/{broker_id}/property')
+async def add_property(
+    db: AsyncIOMotorClient = Depends(get_db),
+    *,
+    broker_id: str,
+    property_data: PropertyBase
+) -> PropertyInDB :
+    print('aaaaaaaa ', property_data)
+    property_in = await property_crud.create(db, broker_id=broker_id, property_in=property_data)
+    return PropertyInDB(**property_in)
