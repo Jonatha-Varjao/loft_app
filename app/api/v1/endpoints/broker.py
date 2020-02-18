@@ -60,7 +60,7 @@ async def get_broker(
     limit: int = Query(10, gt=0),
     skip: int = Query(0, ge=0),
     projections: dict = {}
-) -> [Optional[BrokerList]] :
+) -> Optional[BrokerList] :
     brokers, count = await broker_crud.get_all(
         db,
         skip=skip,
@@ -125,3 +125,22 @@ async def add_property(
     print('aaaaaaaa ', property_data)
     property_in = await property_crud.create(db, broker_id=broker_id, property_in=property_data)
     return PropertyInDB(**property_in)
+
+@router.get('/{broker_id}/property')
+async def get_property(
+    db: AsyncIOMotorClient = Depends(get_db),
+    *,
+    broker_id: str,
+    limit: int = Query(10, gt=0),
+    skip: int = Query(0, ge=0),
+    projections: dict = {}
+) -> PropertyList :
+    properties, count = await property_crud.get_all_by_broker(
+        db,
+        broker_id=broker_id,
+        skip=skip,
+        limit=limit,
+        projections=projections
+    )
+    print('properties ', properties, ' count ', count)
+    return PropertyList(data=properties, count=count)
