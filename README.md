@@ -23,3 +23,8 @@ uvicorn app.main:app --port <PORT> --reload
 Integrantes Team 23 - Teoria do Caos
 
 [@cristianodmtsb](https://github.com/cristianodmtsb)  [@Jonatha-Varjao](https://github.com/Jonatha-Varjao) [@jgguida](https://github.com/jgguida) [@LPatiele](https://github.com/LPatiele) [@diaugust](https://github.com/diaugust)
+
+#### W.I.P
+- Terminar o Match Corretor x Imovel, User x Corretor (K-nn?, K-means?)
+- Crud/Auth User
+- Endpoint pras imagens
