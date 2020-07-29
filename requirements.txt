@@ -25,7 +25,7 @@ pymongo==3.10.1
 six==1.14.0
 starlette==0.12.9
 typed-ast==1.4.1
-uvicorn==0.11.2
+uvicorn==0.11.7
 uvloop==0.14.0
 websockets==8.1
 wrapt==1.11.2
