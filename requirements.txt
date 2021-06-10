@@ -6,7 +6,7 @@ colorama==0.4.3
 cryptography==2.8
 dnspython==1.16.0
 email-validator==1.0.5
-fastapi==0.48.0
+fastapi==0.65.2
 gunicorn==20.0.4
 h11==0.9.0
 httptools==0.0.13
